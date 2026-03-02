@@ -21,7 +21,7 @@ def saveAs():
 	try:
 		f.write(t.rstrip())
 	except:
-		showerror(tittle="Ooops!", message = "Unabnle to save file...")
+		showerror(tittle="ERROR", message = "Unabnle to save file...")
 
 def openFile():
 	f = askopenfile(mode='r')
@@ -31,7 +31,7 @@ def openFile():
 
 root = Tk()
 root.title("My Text Editor")
-root.minsize(width=400,height=400)
+root.minsize(width=800,height=600)
 root.maxsize(width=400,height=400)
 
 text=Text(root, width=400, height=400)
@@ -45,6 +45,10 @@ filemenu.add_command(label="Save", command=saveFile)
 filemenu.add_command(label="Save as", command=saveAs)
 filemenu.add_command(label="Quit",command=root.quit)
 menubar.add_cascade(label="File", menu=filemenu)
+filemenu = Menu(menubar)
+filemenu.add_command(label="T.B.D", command=newFile)
+menubar.add_cascade(label="Settings", menu=filemenu)
 
 root.config(menu=menubar)
+
 root.mainloop()
