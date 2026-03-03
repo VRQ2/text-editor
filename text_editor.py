@@ -1,4 +1,4 @@
-HEAD
+
 from tkinter import filedialog
 from tkinter import *
 
@@ -17,12 +17,12 @@ def saveFile():
 	f.close()
 
 def saveAs():
-	f = asksaveasfile(mode='w', defaultextention='.txt')
+	f = asksaveasfile(mode='w', defaultextension='.txt')
 	t = text.get(0.0, END)
 	try:
 		f.write(t.rstrip())
 	except:
-		showerror(tittle="ERROR", message = "Unabnle to save file...")
+		showerror(title="ERROR", message = "Unabnle to save file...")
 
 def openFile():
 	f = askopenfile(mode='r')
@@ -34,9 +34,10 @@ root = Tk()
 root.title("My Text Editor")
 root.minsize(width=800,height=600)
 root.maxsize(width=400,height=400)
+root.configure(bg="#343567")
 
-text=Text(root, width=400, height=400)
-text.pack()
+text = Text(root, width=400, height=400, bg="#1f1f3d", fg="#ffffff", insertbackground="white")
+text.pack(padx=2, pady=2)
 
 menubar = Menu(root)
 filemenu = Menu(menubar)
@@ -51,4 +52,4 @@ filemenu.add_command(label="T.B.D", command=newFile)
 menubar.add_cascade(label="Settings", menu=filemenu)
 
 root.config(menu=menubar)
-
+root.mainloop()
