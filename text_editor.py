@@ -1,3 +1,4 @@
+import os
 from tkextrafont import Font
 from tkinter import filedialog
 from tkinter import *
@@ -44,14 +45,11 @@ def openFile():
 root = Tk()
 root.title("My Text Editor")
 root.minsize(width=800,height=600)
-root.maxsize(width=400,height=400)
 root.configure(bg="#343567")
 
-fira_font = Font(file="FiraCode-Light.ttf", family="Fira Code")
-text = Text(root, width=400, height=400, bg="#1f1f3d", fg="#ffffff",spacing1=4, 
-               spacing2=2, insertbackground="white")
-text.pack(padx=2, pady=2, expand=True, fill="both")
-text.configure(font=(fira_font, 8))
+text = Text(root, font="Consolas", width=400, height=400, bg="#1f1f3d", fg="#ffffff",spacing1=3, 
+               spacing3=3, insertbackground="white", highlightthickness=0, borderwidth=0)
+text.pack(padx=5, pady=5, expand=True, fill="both")
 
 
 menubar = Menu(root)
