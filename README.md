@@ -11,7 +11,8 @@ Installation
     cd your-repo-name
 
     2. Install dependencies:
-    This project requires the tkextrafont library to load the Fira Code font without requiring the user to install it on their system.
+    This project requires the tkextrafont library to load the Fira Code font 
+    without requiring the user to install it on their system.
 
     Bash
 
