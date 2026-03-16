@@ -7,12 +7,12 @@ from tkinter import font
 
 filename = None
 
-def newFile():
+def newFile(event):
 	global filename
 	filename = "Untitled"
 	text.delete(0.0,END)
 
-def saveFile():
+def saveFile(event):
 	global filename
 	if filename is None:
 		saveAs()
@@ -26,7 +26,7 @@ def saveFile():
 	
 	f.close()
 
-def saveAs():
+def saveAs(event):
 	f = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
 	t = text.get(0.0, END)
 	try:
@@ -34,7 +34,7 @@ def saveAs():
 	except:
 		showerror(title="ERROR", message = "Unabnle to save file...")
 
-def openFile():
+def openFile(event):
 	f = filedialog.askopenfile(mode='r')
 	if f is not None:
 		try:
@@ -73,6 +73,13 @@ root.bind('<Control-MouseWheel>', zoom_mouse)
 root.bind('<Control-minus>', zoom_out)
 root.bind('<Control-plus>', zoom_in)
 root.bind('<Control-equal>', zoom_in)
+# dodac jakiś wskaznik ze plik został zapisany
+root.bind('<Control-s>', saveFile)
+# potrzeba naprawic działanie funkcji saveAs
+# root.bind('<Control-S>', saveAs)
+# gdy tworzy plik zapytac o zapisanie poprzedniego
+root.bind('<Control-n>', newFile)
+root.bind('<Control-o>', openFile)
 
 menubar = Menu(root)
 filemenu = Menu(menubar)
