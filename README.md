@@ -1,6 +1,5 @@
 # text-editor
-A lightweight, Sublime Text-inspired code editor built with Python and Tkinter. This editor uses the Fira Code monospace.
-
+A lightweight, Sublime Text-inspired code editor built with Python and Tkinter. 
 Installation
 
     1.Clone the repository:
