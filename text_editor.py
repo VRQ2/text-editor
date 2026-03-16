@@ -1,7 +1,9 @@
 import os
+import tkinter as tk
 from tkextrafont import Font
 from tkinter import filedialog
 from tkinter import *
+from tkinter import font
 
 filename = None
 
@@ -42,15 +44,35 @@ def openFile():
 		finally:
 			f.close()
 
+def zoom_in(event):
+	zoom_var = custom_font.cget("size")
+	custom_font.configure(size=zoom_var+1)
+
+def zoom_out(event):
+	zoom_var = custom_font.cget("size")
+	custom_font.configure(size=zoom_var-1)
+
+def zoom_mouse(event):
+	if event.delta > 0:
+		zoom_in(event)
+	else:
+		zoom_out(event)
+
 root = Tk()
 root.title("My Text Editor")
-root.minsize(width=800,height=600)
+root.minsize(root.winfo_width(), root.winfo_height())
+root.geometry("600x600+400+150")
 root.configure(bg="#343567")
 
-text = Text(root, font="Consolas", width=400, height=400, bg="#1f1f3d", fg="#ffffff",spacing1=3, 
+custom_font = font.Font(family="Courier", size=11)
+text = Text(root, font=custom_font, width=400, height=400, bg="#1f1f3d", fg="#ffffff",spacing1=3, 
                spacing3=3, insertbackground="white", highlightthickness=0, borderwidth=0)
 text.pack(padx=5, pady=5, expand=True, fill="both")
 
+root.bind('<Control-MouseWheel>', zoom_mouse)
+root.bind('<Control-minus>', zoom_out)
+root.bind('<Control-plus>', zoom_in)
+root.bind('<Control-equal>', zoom_in)
 
 menubar = Menu(root)
 filemenu = Menu(menubar)

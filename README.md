@@ -20,3 +20,11 @@ Installation
 
     3.Ensure the font file is present:
     Make sure FiraCode-Light.ttf is in the same folder as text_editor.py.
+
+Shortcuts
+
+Zoom In: Ctrl + +
+
+Zoom Out: Ctrl + -
+
+Zoom In/Out: Ctrl + Scroll
