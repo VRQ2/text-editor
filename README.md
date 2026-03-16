@@ -22,8 +22,8 @@ Installation
 
 Shortcuts
 
-Zoom In: Ctrl + +
+    Zoom In: Ctrl + +
 
-Zoom Out: Ctrl + -
+    Zoom Out: Ctrl + -
 
-Zoom In/Out: Ctrl + Scroll
+    Zoom In/Out: Ctrl + Scroll
