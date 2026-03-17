@@ -7,18 +7,18 @@ from tkinter import font
 
 filename = None
 
-def newFile(event):
+def newFile(event=None):
 	global filename
-	filename = "Untitled"
-	text.delete(0.0,END)
+	filename = "Untitled.txt"
+	text.delete(1.0,END)
 
-def saveFile(event):
+def saveFile(event=None):
 	global filename
 	if filename is None:
 		saveAs()
 		return
 	try:
-		t = text.get(0.0,END)
+		t = text.get(1.0,END)
 		with open(filename, 'w') as f:
 			f.write(t)
 	except Exception as e:
@@ -26,21 +26,21 @@ def saveFile(event):
 	
 	f.close()
 
-def saveAs(event):
+def saveAs(event=None):
 	f = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
-	t = text.get(0.0, END)
+	t = text.get(1.0, END)
 	try:
 		f.write(t.rstrip())
 	except:
 		showerror(title="ERROR", message = "Unabnle to save file...")
 
-def openFile(event):
+def openFile(event=None):
 	f = filedialog.askopenfile(mode='r')
 	if f is not None:
 		try:
 			t = f.read()
-			text.delete(0.0, END)
-			text.insert(0.0, t)
+			text.delete(1.0, END)
+			text.insert(1.0, t)
 		finally:
 			f.close()
 
@@ -75,11 +75,12 @@ root.bind('<Control-plus>', zoom_in)
 root.bind('<Control-equal>', zoom_in)
 # dodac jakiś wskaznik ze plik został zapisany
 root.bind('<Control-s>', saveFile)
-# potrzeba naprawic działanie funkcji saveAs
-# root.bind('<Control-S>', saveAs)
 # gdy tworzy plik zapytac o zapisanie poprzedniego
 root.bind('<Control-n>', newFile)
 root.bind('<Control-o>', openFile)
+root.bind('<Control-S>', saveFile)
+root.bind('<Control-N>', newFile)
+root.bind('<Control-O>', openFile)
 
 menubar = Menu(root)
 filemenu = Menu(menubar)
@@ -90,7 +91,7 @@ filemenu.add_command(label="Save as", command=saveAs)
 filemenu.add_command(label="Quit",command=root.quit)
 menubar.add_cascade(label="File", menu=filemenu)
 filemenu = Menu(menubar)
-filemenu.add_command(label="T.B.D", command=newFile)
+filemenu.add_command(label="T.B.D", command=None)
 menubar.add_cascade(label="Settings", menu=filemenu)
 
 root.config(menu=menubar)
