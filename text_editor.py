@@ -4,13 +4,17 @@ from tkextrafont import Font
 from tkinter import filedialog
 from tkinter import *
 from tkinter import font
+from pathlib import Path
 
-filename = None
+filename = "My Text Editor"
 
 def newFile(event=None):
 	global filename
-	filename = "Untitled.txt"
 	text.delete(1.0,END)
+	f = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
+	filename = Path(f.name).name
+	root.title(f"My Text Editor - {filename}")
+
 
 def saveFile(event=None):
 	global filename
@@ -29,6 +33,9 @@ def saveFile(event=None):
 def saveAs(event=None):
 	f = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
 	t = text.get(1.0, END)
+	global filename
+	filename = Path(f.name).name
+	root.title(f"My Text Editor - {filename}")
 	try:
 		f.write(t.rstrip())
 	except:
@@ -37,6 +44,9 @@ def saveAs(event=None):
 def openFile(event=None):
 	f = filedialog.askopenfile(mode='r')
 	if f is not None:
+		global filename
+		filename = Path(f.name).name
+		root.title(f"My Text Editor - {filename}")
 		try:
 			t = f.read()
 			text.delete(1.0, END)
@@ -59,7 +69,7 @@ def zoom_mouse(event):
 		zoom_out(event)
 
 root = Tk()
-root.title("My Text Editor")
+root.title(filename)
 root.minsize(root.winfo_width(), root.winfo_height())
 root.geometry("600x600+400+150")
 root.configure(bg="#343567")
