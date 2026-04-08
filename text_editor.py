@@ -1,4 +1,5 @@
 import os
+import re
 import tkinter as tk
 from tkextrafont import Font
 from tkinter import filedialog
@@ -68,6 +69,17 @@ def zoom_mouse(event):
 	else:
 		zoom_out(event)
 
+def handle_return(event):
+	line_content = text.get("insert linestart", "insert")
+	indentation_length = len(line_content) - len(line_content.lstrip())
+	indentation = line_content[:indentation_length]
+	if line_content.strip().endswith(':'):
+		indentation += '\t'
+		
+	text.insert("insert", "\n" + indentation)
+	
+	return "break"
+
 root = Tk()
 root.title(filename)
 root.minsize(root.winfo_width(), root.winfo_height())
@@ -91,6 +103,7 @@ root.bind('<Control-o>', openFile)
 root.bind('<Control-S>', saveFile)
 root.bind('<Control-N>', newFile)
 root.bind('<Control-O>', openFile)
+text.bind('<Return>', handle_return)
 
 menubar = Menu(root)
 filemenu = Menu(menubar)
