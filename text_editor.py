@@ -7,6 +7,46 @@ from tkinter import *
 from tkinter import font
 from pathlib import Path
 
+class LineNumbers(tk.Canvas):
+	def __init__(self, *args, **kwargs):
+		tk.Canvas.__init__(self, *args, **kwargs)
+		self.textwidget = None
+
+	def redraw(self, *args):
+		"""Redraw the line numbers gutter"""
+		if not self.textwidget: return
+		self.delete("all")
+		i = self.textwidget.index("@0,0")
+		while True:
+			dline = self.textwidget.dlineinfo(i)
+			if dline is None: break
+			y = dline[1]
+			linenum = str(i).split(".")[0]
+			self.create_text(5, y+8, anchor="nw", text=linenum,
+							 fill="#888888", font=self.textwidget.cget("font"))
+			i = self.textwidget.index("%s+1line" % i)
+
+class CustomText(tk.Text):
+	def __init__(self, *args, **kwargs):
+		tk.Text.__init__(self, *args, **kwargs)
+		self._orig = self._w + "_orig"
+		self.tk.call("rename", self._w, self._orig)
+		self.tk.createcommand(self._w, self._proxy)
+
+	def _proxy(self, *args):
+		cmd = (self._orig,) + args
+		try:
+			result = self.tk.call(cmd)
+		except Exception:
+			return None
+			
+		if (args[0] in ("insert", "replace", "delete") or 
+			args[0:3] == ("mark", "set", "insert") or
+			args[0:2] == ("xview", "moveto") or args[0:2] == ("xview", "scroll") or
+			args[0:2] == ("yview", "moveto") or args[0:2] == ("yview", "scroll")):
+			self.event_generate("<<Change>>", when="tail")
+		return result
+
 filename = "My Text Editor"
 
 def newFile(event=None):
@@ -58,15 +98,17 @@ def openFile(event=None):
 def zoom_in(event):
 	zoom_var = custom_font.cget("size")
 	custom_font.configure(size=zoom_var+1)
+	ln.redraw()
 
 def zoom_out(event):
 	zoom_var = custom_font.cget("size")
 	custom_font.configure(size=zoom_var-1)
+	ln.redraw()
 
 def zoom_mouse(event):
-	if event.delta > 0:
+	if event.num == 4 or event.delta > 0:
 		zoom_in(event)
-	else:
+	elif event.num == 5 or event.delta < 0:
 		zoom_out(event)
 
 def handle_return(event):
@@ -87,11 +129,25 @@ root.geometry("600x600+400+150")
 root.configure(bg="#343567")
 
 custom_font = font.Font(family="Courier", size=11)
-text = Text(root, font=custom_font, width=400, height=400, bg="#1f1f3d", fg="#ffffff",spacing1=3, 
+
+container = Frame(root, bg="#343567")
+container.pack(expand=True, fill="both")
+
+ln = LineNumbers(container, width=35, bg="#1f1f3d", highlightthickness=0, bd=0)
+ln.pack(side="left", fill="y")
+
+text = CustomText(container, font=custom_font, bg="#1f1f3d", fg="#ffffff",spacing1=3, 
                spacing3=3, insertbackground="white", highlightthickness=0, borderwidth=0)
-text.pack(padx=5, pady=5, expand=True, fill="both")
+text.pack(side="right", padx=5, pady=5, expand=True, fill="both")
+
+ln.textwidget = text
+
+text.bind("<<Change>>", lambda e: ln.redraw())
+text.bind("<Configure>", lambda e: ln.redraw())
 
 root.bind('<Control-MouseWheel>', zoom_mouse)
+root.bind('<Control-Button-4>', zoom_mouse)
+root.bind('<Control-Button-5>', zoom_mouse)
 root.bind('<Control-minus>', zoom_out)
 root.bind('<Control-plus>', zoom_in)
 root.bind('<Control-equal>', zoom_in)
