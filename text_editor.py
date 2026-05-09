@@ -1,8 +1,11 @@
 import os
 import re
 import tkinter as tk
-from tkextrafont import Font
-from tkinter import filedialog
+try:
+    from tkextrafont import Font
+except ImportError:
+    Font = None
+from tkinter import filedialog, messagebox
 from tkinter import *
 from tkinter import font
 from pathlib import Path
@@ -49,6 +52,12 @@ class CustomText(tk.Text):
 
 filename = "My Text Editor"
 
+def toggle_lines():
+	if ln.winfo_viewable():
+		ln.pack_forget()
+	else:
+		ln.pack(side="left", fill="y", before=text)
+
 def newFile(event=None):
 	global filename
 	text.delete(1.0,END)
@@ -73,6 +82,7 @@ def saveFile(event=None):
 
 def saveAs(event=None):
 	f = filedialog.asksaveasfile(mode='w', defaultextension='.txt')
+	if f is None: return
 	t = text.get(1.0, END)
 	global filename
 	filename = Path(f.name).name
@@ -80,7 +90,7 @@ def saveAs(event=None):
 	try:
 		f.write(t.rstrip())
 	except:
-		showerror(title="ERROR", message = "Unabnle to save file...")
+		messagebox.showerror(title="ERROR", message = "Unable to save file...")
 
 def openFile(event=None):
 	f = filedialog.askopenfile(mode='r')
@@ -162,16 +172,21 @@ root.bind('<Control-O>', openFile)
 text.bind('<Return>', handle_return)
 
 menubar = Menu(root)
-filemenu = Menu(menubar)
+filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="New", command=newFile)
 filemenu.add_command(label="Open", command=openFile)
 filemenu.add_command(label="Save", command=saveFile)
 filemenu.add_command(label="Save as", command=saveAs)
 filemenu.add_command(label="Quit",command=root.quit)
 menubar.add_cascade(label="File", menu=filemenu)
-filemenu = Menu(menubar)
-filemenu.add_command(label="T.B.D", command=None)
-menubar.add_cascade(label="Settings", menu=filemenu)
+
+viewmenu = Menu(menubar, tearoff=0)
+viewmenu.add_command(label="Toggle Line Numbers", command=toggle_lines)
+menubar.add_cascade(label="View", menu=viewmenu)
+
+settingsmenu = Menu(menubar, tearoff=0)
+settingsmenu.add_command(label="T.B.D", command=None)
+menubar.add_cascade(label="Settings", menu=settingsmenu)
 
 root.config(menu=menubar)
 root.mainloop()
